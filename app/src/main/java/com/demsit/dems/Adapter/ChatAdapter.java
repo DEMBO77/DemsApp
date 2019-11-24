@@ -122,11 +122,17 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MessageViewHol
                                 }
                                 if(which == 0){
                                     chatRef.child(senderId).child(receiverId).child(messageId).child("type").setValue("deleted");
+                                    messageViewHolder.content.setVisibility(View.VISIBLE);
+                                    messageViewHolder.image.setVisibility(View.INVISIBLE);
+                                    messageViewHolder.file.setVisibility(View.GONE);
                                     messageViewHolder.content.setText(context.getString(R.string.message_deleted));
                                     messageViewHolder.content.setTextColor(context.getResources().getColor(R.color.deleteMessage));
                                 }else{
                                     chatRef.child(senderId).child(receiverId).child(messageId).child("type").setValue("deleted");
                                     chatRef.child(receiverId).child(senderId).child(messageId).child("type").setValue("deleted");
+                                    messageViewHolder.content.setVisibility(View.VISIBLE);
+                                    messageViewHolder.image.setVisibility(View.INVISIBLE);
+                                    messageViewHolder.file.setVisibility(View.GONE);
                                     messageViewHolder.content.setText(context.getString(R.string.message_deleted));
                                     messageViewHolder.content.setTextColor(context.getResources().getColor(R.color.deleteMessage));
                                 }

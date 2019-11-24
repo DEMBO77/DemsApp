@@ -119,6 +119,9 @@ public class TeamChatAdapter  extends RecyclerView.Adapter<TeamChatAdapter.TeamC
                                         }
                                     }
                                     teamChatRef.child(chatId).child("type").setValue("deleted");
+                                    teamChatViewHolder.content.setVisibility(View.VISIBLE);
+                                    teamChatViewHolder.image.setVisibility(View.INVISIBLE);
+                                    teamChatViewHolder.messageFile.setVisibility(View.GONE);
                                     teamChatViewHolder.content.setText(context.getString(R.string.message_deleted));
                                     teamChatViewHolder.content.setTextColor(context.getResources().getColor(R.color.deleteMessage));
                                 }
