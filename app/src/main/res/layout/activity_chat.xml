@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ChatActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <include
+            android:id="@+id/chat_bar"
+            layout="@layout/bar_chat">
+        </include>
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/rv_chat"
+            android:layout_above="@+id/send_message_layout_chat"
+            android:layout_below="@+id/chat_bar"
+            tools:listitem="@layout/list_chat_item">
+
+        </androidx.recyclerview.widget.RecyclerView>
+        <LinearLayout
+            android:id="@+id/send_message_layout_chat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal"
+            android:gravity="center">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_file_upload"
+                android:id="@+id/upload_file_button"
+                android:padding="3dp"/>
+            <EditText
+                android:id="@+id/chat_field"
+                android:layout_width="0dp"
+                android:layout_weight="8"
+                android:layout_height="wrap_content"
+                android:hint="@string/chat_field_hint"
+                android:padding="16dp"
+                />
+            <ImageView
+                android:id="@+id/send_chat_button"
+                android:layout_width="0dp"
+                android:padding="8dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_send" />
+        </LinearLayout>
+    </RelativeLayout>
+
+
+
+
+
+</FrameLayout>

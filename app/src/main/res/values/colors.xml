@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#9C27B0</color>
+    <color name="colorPrimaryDark">#2D0B33</color>
+    <color name="colorAccent">#000000</color>
+    <color name="red">#FF0000</color>
+    <color name="deleteMessage">@android:color/holo_orange_dark</color>
+    <color name="white">#ffffff</color>
+    <color name="dark">#000000</color>
+</resources>

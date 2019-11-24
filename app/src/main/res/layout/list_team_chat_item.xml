@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="8dp"
+    android:id="@+id/team_chat_item_container">
+
+    <TextView
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="20dp"
+        android:id="@+id/message_date"
+        android:layout_gravity="center"/>
+
+    <LinearLayout
+        android:id="@+id/team_chat_container_child"
+        android:layout_width="270dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background ="@drawable/chat_mess_r_bg">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="10sp"
+            android:padding="8dp"
+            android:textColor="@android:color/holo_orange_light"
+            android:text="Dembo"
+            android:id="@+id/team_chat_sender"/>
+        <TextView
+            android:gravity="fill_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:padding="5dp"
+            android:text="Ceci est un exemple de ce à quoi va ressembler les messages que i 'll send or receive. Is it nice ?"
+            android:textStyle="bold"
+            android:id="@+id/team_chat_content"
+            />
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/message_image"
+            android:padding="10dp"
+            android:visibility="gone"/>
+        <LinearLayout
+            android:padding="4dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/message_file"
+            android:visibility="gone">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_file"
+                android:padding="3dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:textColor="@android:color/white"
+                android:id="@+id/file_name"
+                android:textStyle="bold"
+                android:maxLines="1"
+                android:ellipsize="end"/>
+        </LinearLayout>
+        <TextView
+            android:id="@+id/team_chat_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:text="09/11/19 02:21"
+            android:textColor="@android:color/darker_gray"
+            android:padding="7dp"
+            android:textSize="10sp"/>
+    </LinearLayout>
+
+
+</LinearLayout>

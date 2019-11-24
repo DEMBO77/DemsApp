@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "501377370698",
+    "firebase_url": "https://dems-31c98.firebaseio.com",
+    "project_id": "dems-31c98",
+    "storage_bucket": "dems-31c98.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:501377370698:android:4d4cf4bd7dc14190c934b3",
+        "android_client_info": {
+          "package_name": "com.demsit.dems"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "501377370698-lbd0nshkrnkrheegqn56k6h1olomdljn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.demsit.dems",
+            "certificate_hash": "2627f19699ea34740270b0190a9463c5fca6ed98"
+          }
+        },
+        {
+          "client_id": "501377370698-3m922ff5l103u3j9446icp2haevc2e6e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBJu6Ps6TpXY0ktUX8N40KwkXhh5BAAGs8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "501377370698-3m922ff5l103u3j9446icp2haevc2e6e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

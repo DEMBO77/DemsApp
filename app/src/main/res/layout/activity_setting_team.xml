@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SettingTeamActivity">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <include
+            android:id="@+id/team_setting_bar"
+            layout="@layout/team_setting_bar">
+        </include>
+
+        <LinearLayout
+            android:layout_below="@+id/team_setting_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_marginHorizontal="10dp"
+            android:orientation="vertical"
+            android:id="@+id/team_info">
+            <EditText
+                android:id="@+id/team_setting_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:text="team name"
+                android:hint="@string/team_setting_name"/>
+            <EditText
+                android:id="@+id/team_setting_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:inputType="none"                android:text="@string/team_setting_description"/>
+            <Button
+                android:id="@+id/team_setting_update_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimaryDark"
+                android:text="Update"
+                android:visibility="invisible"
+                android:textColor="@android:color/white"/>
+
+        </LinearLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:padding="10dp"
+            android:layout_below="@+id/team_info"
+            android:layout_above="@+id/addC"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rv_team_setting"
+            tools:listitem="@layout/list_team_contributors_item"
+            android:scrollbars="vertical"
+            android:fadeScrollbars="false"
+            android:scrollbarThumbVertical="@android:color/darker_gray"
+            android:scrollbarSize="5dp">
+        </androidx.recyclerview.widget.RecyclerView>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:id="@+id/addC"
+            android:padding="10dp"
+            android:layout_alignParentBottom="true">
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="add"
+                android:background="@color/colorPrimaryDark"
+                android:textColor="@android:color/white"
+                android:layout_marginHorizontal="10dp"
+                android:id="@+id/add_contributor"
+                android:visibility="invisible"/>
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+
+
+</FrameLayout>
