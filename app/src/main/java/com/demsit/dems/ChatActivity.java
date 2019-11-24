@@ -41,7 +41,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class ChatActivity extends AppCompatActivity {
     private String senderUID, receiverUID, receiverName, receiverImage;
@@ -70,15 +72,18 @@ public class ChatActivity extends AppCompatActivity {
         Picasso.get().load(receiverImage).placeholder(R.drawable.ic_account).into(receiverImageView);
         messageRef = FirebaseDatabase.getInstance().getReference().child("Messages").child(senderUID).child(receiverUID);
         FirebaseRecyclerOptions options = new FirebaseRecyclerOptions.Builder<Message>().setQuery(messageRef, Message.class).build();
-        adapter = new ChatAdapter(options, receiverUID);
+        final List<Message> messages = new ArrayList<Message>();
+        adapter = new ChatAdapter(receiverUID, messages);
         rv = findViewById(R.id.rv_chat);
         rv.hasFixedSize();
         rv.setLayoutManager(new LinearLayoutManager(this));
         rv.setAdapter(adapter);
-        adapter.startListening();
         messageRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                Message mess = dataSnapshot.getValue(Message.class);
+                mess.setUid(dataSnapshot.getKey());
+                messages.add(mess);
                 rv.smoothScrollToPosition(adapter.getItemCount());
             }
 

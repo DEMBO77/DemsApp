@@ -38,6 +38,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -67,15 +68,19 @@ public class TeamChatActivity extends AppCompatActivity {
         teamVM = ViewModelProviders.of(this).get(TeamVM.class);
         init();
         FirebaseRecyclerOptions options = new FirebaseRecyclerOptions.Builder<Message>().setQuery(teamChatRef, Message.class).build();
-        adapter = new TeamChatAdapter(options, teamUID);
+        final List<Message> messages = new ArrayList<Message>();
+        adapter = new TeamChatAdapter(teamUID, messages);
         rv = findViewById(R.id.rv_team_chat);
         rv.hasFixedSize();
         rv.setLayoutManager(new LinearLayoutManager(this));
         rv.setAdapter(adapter);
-        adapter.startListening();
         teamChatRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                Message message = dataSnapshot.getValue(Message.class);
+                message.setUid(dataSnapshot.getKey());
+                messages.add(message);
+                adapter.notifyDataSetChanged();
                 rv.smoothScrollToPosition(adapter.getItemCount());
             }
 

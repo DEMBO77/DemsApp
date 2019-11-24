@@ -8,13 +8,11 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 
-import com.demsit.dems.Fragment.ChatFragment;
 import com.demsit.dems.Fragment.ContactFragment;
 import com.demsit.dems.Fragment.SettingFragment;
 import com.demsit.dems.Fragment.TeamFragment;
 
 import com.demsit.dems.Fragment.UserRequestFragment;
-import com.demsit.dems.Repository.TeamRepository;
 import com.demsit.dems.ViewModel.TeamVM;
 import com.demsit.dems.ViewModel.UserVM;
 
@@ -82,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         teamVM = ViewModelProviders.of(this).get(TeamVM.class);
         userVM = ViewModelProviders.of(this).get(UserVM.class);
-        if(savedInstanceState == null){
+        if(savedInstanceState == null && userVM.getUser()!=null){
             Fragment f = new TeamFragment();
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.to_replace, f);

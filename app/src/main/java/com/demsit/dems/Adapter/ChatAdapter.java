@@ -35,7 +35,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class ChatAdapter extends FirebaseRecyclerAdapter<Message, ChatAdapter.MessageViewHolder> {
+public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MessageViewHolder> {
 
     private DatabaseReference chatRef;
     private Mydb db;
@@ -43,116 +43,106 @@ public class ChatAdapter extends FirebaseRecyclerAdapter<Message, ChatAdapter.Me
     private List messageDate = new ArrayList();
     private List<Message> messages;
 
-    /**
-     * Initialize a {@link RecyclerView.Adapter} that listens to a Firebase query. See
-     * {@link FirebaseRecyclerOptions} for configuration options.
-     *
-     * @param options
-     */
-    public ChatAdapter(@NonNull FirebaseRecyclerOptions<Message> options, String receiverId) {
-        super(options);
+
+    public ChatAdapter(String receiverId, List messages) {
         db = Mydb.getInstance();
         this.receiverId = receiverId;
         this.senderId = db.user.getUid();
         this.chatRef = db.ref.child("Messages");
+        this.messages = messages;
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull final ChatAdapter.MessageViewHolder messageViewHolder, int i, @NonNull Message mess) {
-        final String messageId = getRef(i).getKey(), receiverId = getRef(i).getParent().getKey(), senderId = getRef(i).getParent().getParent().getKey();
+    public void onBindViewHolder(@NonNull final ChatAdapter.MessageViewHolder messageViewHolder, final int i) {
+        //final String messageId = getRef(i).getKey(), receiverId = getRef(i).getParent().getKey(), senderId = getRef(i).getParent().getParent().getKey();
         final Context context = messageViewHolder.itemView.getContext();
-        chatRef.child(senderId).child(receiverId).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                final Message message = dataSnapshot.child(messageId).getValue(Message.class);
-                if(message!=null){
-
-
-                    if(message.getSender().equals(senderId)){
-                        messageViewHolder.itemView.findViewById(R.id.chat_container_child).setBackgroundResource(R.drawable.chat_mess_s_bg);
-                        messageViewHolder.itemView.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-                        messageViewHolder.content.setTextColor(context.getResources().getColor(R.color.white));
-                        messageViewHolder.fileName.setTextColor(context.getResources().getColor(R.color.white));
-                    }else{
-                        messageViewHolder.content.setTextColor(context.getResources().getColor(R.color.dark));
-                        messageViewHolder.fileName.setTextColor(context.getResources().getColor(R.color.dark));
+        final Message message = messages.get(i);
+        final String messageId = message.getUid();
+        if(message!=null){
+            String date = message.getDate().split("[,]")[0];
+            messageViewHolder.time.setText(date+" "+message.getTime());
+            if(message.getSender().equals(senderId)){
+                messageViewHolder.itemView.findViewById(R.id.chat_container_child).setBackgroundResource(R.drawable.chat_mess_s_bg);
+                messageViewHolder.itemView.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+                messageViewHolder.content.setTextColor(context.getResources().getColor(R.color.white));
+                messageViewHolder.fileName.setTextColor(context.getResources().getColor(R.color.white));
+            }else{
+                messageViewHolder.content.setTextColor(context.getResources().getColor(R.color.dark));
+                messageViewHolder.fileName.setTextColor(context.getResources().getColor(R.color.dark));
+            }
+            if(message.getType().equals("text")){
+                messageViewHolder.content.setText(message.getContent());
+            }else if(message.getType().equals("image")){
+                messageViewHolder.content.setText("");
+                messageViewHolder.content.setVisibility(View.GONE);
+                messageViewHolder.image.setVisibility(View.VISIBLE);
+                Picasso.get().load(message.getContent()).placeholder(R.drawable.ic_insert_photo).fit().into(messageViewHolder.image);
+            }else if(!message.getType().equals("deleted") && (message.getType().equals("pdf") || message.getType().equals("docx"))){
+                messageViewHolder.content.setText("");
+                messageViewHolder.content.setVisibility(View.GONE);
+                messageViewHolder.file.setVisibility(View.VISIBLE);
+                messageViewHolder.fileName.setText(message.getInfo());
+                messageViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent viewFile  = new Intent(Intent.ACTION_VIEW, Uri.parse(message.getContent()));
+                        messageViewHolder.itemView.getContext().startActivity(viewFile);
                     }
-                    if(message.getType().equals("text")){
-                        messageViewHolder.content.setText(message.getContent());
-                        messageViewHolder.time.setText(message.getDate()+" "+message.getTime());
-                    }else if(message.getType().equals("image")){
-                        messageViewHolder.content.setText("");
-                        messageViewHolder.content.setVisibility(View.GONE);
-                        messageViewHolder.image.setVisibility(View.VISIBLE);
-                        messageViewHolder.time.setText(message.getDate()+" "+message.getTime());
-                        Picasso.get().load(message.getContent()).placeholder(R.drawable.ic_insert_photo).fit().into(messageViewHolder.image);
-                    }else if(!message.getType().equals("deleted") && (message.getType().equals("pdf") || message.getType().equals("docx"))){
-                        messageViewHolder.content.setText("");
-                        messageViewHolder.content.setVisibility(View.GONE);
-                        messageViewHolder.file.setVisibility(View.VISIBLE);
-                        messageViewHolder.fileName.setText(message.getInfo());
-                        messageViewHolder.time.setText(message.getDate()+" "+message.getTime());
-                        messageViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                });
+            }else if(message.getType().equals("deleted")){
+                messageViewHolder.content.setText(context.getString(R.string.message_deleted));
+                messageViewHolder.content.setTextColor(context.getResources().getColor(R.color.deleteMessage));
+
+            }
+
+            if(!message.getType().equals("deleted")){
+                messageViewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        AlertDialog.Builder builder = createBuilder(messageViewHolder);
+                        final Context c = messageViewHolder.itemView.getContext();
+                        CharSequence op[];
+                        if(message.getSender().equals(senderId)){
+                            op = new CharSequence[]{c.getString(R.string.delete_for_me), c.getString(R.string.delete_for_evr)};
+                        }else{
+                            op = new CharSequence[]{c.getString(R.string.delete_for_me)};
+                        }
+                        builder.setItems(op, new DialogInterface.OnClickListener(){
+
                             @Override
-                            public void onClick(View v) {
-                                Intent viewFile  = new Intent(Intent.ACTION_VIEW, Uri.parse(message.getContent()));
-                                messageViewHolder.itemView.getContext().startActivity(viewFile);
-                            }
-                        });
-                    }else if(message.getType().equals("deleted")){
-                        messageViewHolder.content.setText(context.getString(R.string.message_deleted));
-                        messageViewHolder.content.setTextColor(context.getResources().getColor(R.color.deleteMessage));
-                        messageViewHolder.time.setText(message.getDate()+" "+message.getTime());
-
-                    }
-
-                    if(!message.getType().equals("deleted")){
-                        messageViewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                            @Override
-                            public boolean onLongClick(View v) {
-                                AlertDialog.Builder builder = createBuilder(messageViewHolder);
-                                final Context c = messageViewHolder.itemView.getContext();
-                                CharSequence op[];
-                                if(message.getSender().equals(senderId)){
-                                    op = new CharSequence[]{c.getString(R.string.delete_for_me), c.getString(R.string.delete_for_evr)};
-                                }else{
-                                    op = new CharSequence[]{c.getString(R.string.delete_for_me)};
-                                }
-                                builder.setItems(op, new DialogInterface.OnClickListener(){
-
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        if(!message.getType().equals("text")){
-                                            if(message.getType().equals("image")){
-                                                db.storageRef.child("Images").child(messageId+".jpg").delete();
-                                            }else if(message.getType().equals("pdf")){
-                                                db.storageRef.child("DocFiles").child(messageId+".pdf").delete();
-                                            }else if(message.getType().equals("docx")){
-                                                db.storageRef.child("DocFiles").child(messageId+".docx").delete();
-                                            }
-                                        }
-                                        if(which == 0){
-                                            chatRef.child(senderId).child(receiverId).child(messageId).child("type").setValue("deleted");
-                                        }else{
-                                            chatRef.child(senderId).child(receiverId).child(messageId).child("type").setValue("deleted");
-                                            chatRef.child(receiverId).child(senderId).child(messageId).child("type").setValue("deleted");
-                                        }
+                            public void onClick(DialogInterface dialog, int which) {
+                                if(!message.getType().equals("text")){
+                                    if(message.getType().equals("image")){
+                                        db.storageRef.child("Images").child(messageId+".jpg").delete();
+                                    }else if(message.getType().equals("pdf")){
+                                        db.storageRef.child("DocFiles").child(messageId+".pdf").delete();
+                                    }else if(message.getType().equals("docx")){
+                                        db.storageRef.child("DocFiles").child(messageId+".docx").delete();
                                     }
-                                });
-                                builder.show();
-                                return false;
+                                }
+                                if(which == 0){
+                                    chatRef.child(senderId).child(receiverId).child(messageId).child("type").setValue("deleted");
+                                    messageViewHolder.content.setText(context.getString(R.string.message_deleted));
+                                    messageViewHolder.content.setTextColor(context.getResources().getColor(R.color.deleteMessage));
+                                }else{
+                                    chatRef.child(senderId).child(receiverId).child(messageId).child("type").setValue("deleted");
+                                    chatRef.child(receiverId).child(senderId).child(messageId).child("type").setValue("deleted");
+                                    messageViewHolder.content.setText(context.getString(R.string.message_deleted));
+                                    messageViewHolder.content.setTextColor(context.getResources().getColor(R.color.deleteMessage));
+                                }
                             }
                         });
+                        builder.show();
+                        return false;
                     }
-
-                }
+                });
             }
+        }
+    }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+    @Override
+    public int getItemCount() {
+        return messages.size();
     }
 
     @NonNull
